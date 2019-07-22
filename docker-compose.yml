@@ -1,0 +1,33 @@
+version: '3'
+services:
+  db:
+    build: ./db
+    environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: board
+     MYSQL_USER: root
+     MYSQL_PASSWORD: root
+    ports:
+      - "9906:3306"
+  back-end:
+    build: ./back-end
+    container_name: back-end
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./web/src:/var/www/html
+    stdin_open: true
+    tty: true
+  front-end:
+    build: ./front-end
+    container_name: front-end
+    depends_on:
+      - back-end
+    ports:
+      - "3000:80"
+    volumes:
+      - ./web/src:/var/www/html
+    stdin_open: true
+    tty: true
